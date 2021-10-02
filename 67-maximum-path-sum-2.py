@@ -2,9 +2,51 @@ import time
 from collections import deque
 
 
-class container:
-    def __init__(self, cost, x, y):
-        self.cost, self.x, self.y = cost, x, y
+# class container:
+#     def __init__(self, cost, x, y):
+#         self.cost, self.x, self.y = cost, x, y
+#
+#
+# class maxHeap:
+#     def __init__(self):
+#         self.arr = []
+#
+#     def heapifyUp(self, index):
+#         parent = (index-1) // 2
+#         if index and self.arr[parent].cost < self.arr[index].cost:
+#             self.arr[parent], self.arr[index] = self.arr[index], self.arr[parent]
+#             self.heapifyUp(parent)
+#
+#     def heapifyDown(self, index):
+#         largest = index
+#         left, right = 2*index + 1, 2*index + 2
+#
+#         if left < len(self.arr) and self.arr[left].cost > self.arr[index].cost:
+#             largest = left
+#         if right < len(self.arr) and self.arr[right].cost > self.arr[largest].cost:
+#             largest = right
+#
+#         if largest != index:
+#             self.arr[largest], self.arr[index] = self.arr[index], self.arr[largest]
+#             self.heapifyDown(largest)
+#
+#     def insert(self, x):
+#         self.arr.append(x)
+#         index = len(self.arr)
+#         self.heapifyUp(index-1)
+#
+#     def remove(self):
+#         if len(self.arr) == 0:
+#             return
+#         self.arr[0] = self.arr[len(self.arr)-1]
+#         self.arr.pop()
+#         self.heapifyDown(0)
+#
+#     def top(self):
+#         return self.arr[0]
+#
+#     def size(self):
+#         return len(self.arr)
 
 
 def solve():
@@ -119,38 +161,11 @@ def solve():
         arr[i] = arr[i].split(' ')
         arr[i] = [int(num.strip()) for num in arr[i]]
 
-    MIN = -10**9
-    dist = dict()
-    dist["0-0"] = 0
+    for row in range(len(arr)-1, 0, -1):
+        for col in range(0, row):
+            arr[row-1][col] += max(arr[row][col], arr[row][col+1])
 
-    queue = deque()
-    queue.append(container(0, 0, 0))
-
-    ans = 0
-    while len(queue) != 0:
-        curr = queue.popleft()
-        HASH = str(curr.x) + "-" + str(curr.y)
-
-        if curr.x == len(arr)-1:
-            ans = max(ans, curr.cost)
-            continue
-
-        if curr.x+1 < len(arr):
-            HASH1 = str(curr.x+1) + "-" + str(curr.y)
-            HASH2 = str(curr.x+1) + "-" + str(curr.y+1)
-
-            if dist.get(HASH1, MIN) < dist.get(HASH) + curr.cost:
-                dist[HASH1] = curr.cost + arr[curr.x+1][curr.y]
-                queue.append(container(dist.get(HASH1), curr.x+1, curr.y))
-
-            if curr.y+1 < len(arr[curr.x+1]) and dist.get(HASH2, MIN) < dist.get(HASH) + curr.cost:
-                dist[HASH2] = curr.cost + arr[curr.x+1][curr.y+1]
-                queue.append(container(dist.get(HASH2), curr.x+1, curr.y+1))
-        else:
-            continue
-
-    print(ans)
-
+    print(arr[0][0])
 
 
 def main():
